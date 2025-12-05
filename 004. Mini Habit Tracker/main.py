@@ -23,74 +23,65 @@
     # Handle all invalid inputs gracefully.
     # Display completion percentage rounded to 2 decimal places.
 
-
-def habit_count():
+def get_positive_int(prompt):
+    """Ask the user for a positive integer."""
     while True:
         try:
-            number = int(input("How many habit you want to track today?: "))
-            if number <= 0:
-                print("Invalid input, please input a number more than 0.")
-            else:
-                return number
+            value = int(input(prompt))
+            if value > 0:
+                return value
+            print("Please enter a number greater than 0.")
         except ValueError:
-            print("Invalid input: Please type a numeric input only.")
+            print("Invalid input. Please enter a numeric value.")
 
-def is_habit_completed(count):
-    habit = {}
-    for _ in range(count):
-        while True:
-            habit_name = input("What habit it is?: ")
-            if habit_name not in habit:
-                break
-            else:
-                print("Habit can't be the same, please enter different habit of yours.")
-        while True:
-            is_completed = input("Did you complete it today? (yes/no): ").lower()
-            if is_completed == "yes":
-                done = True
-                break
-            elif is_completed == "no":
-                done = False
-                break
-            else:
-                print("Please typed 'yes' or 'no' only. Try again.")
-
-        # adding in dictionaries
-        habit[habit_name] = done
-
-    return habit
-
-def calculate_completion(habits_dictionary, count):
-    completed = 0
-    for value in habits_dictionary.values():
-        if value:
-            completed += 1
-
-    completion_percentage = round((completed / count), 2) * 100
-    return completion_percentage
-
-
-def display_habits_completion(habits_dictionary):
-    """
-    Displays the completion status (True/False) of habits.
-    """
-    idx = 1
-    for habit_name, is_completed in habits_dictionary.items():
-        if is_completed:
-            status = "Completed"
+def get_unique_habit(existing_habits):
+    """Ask for a habit name that is not already in the dictionary."""
+    while True:
+        habit = input("Enter habit name: ").strip()
+        if habit == "":
+            print("Habit name cannot be empty.")
+        elif habit in existing_habits:
+            print("Habit already exists. Enter a different habit.")
         else:
-            status = "Incomplete"
-        # This print statement runs exactly once per habit
-        print(f"{idx}. {habit_name} - {status}")
-        idx += 1
+            return habit
 
-def display_results():
-    counts = habit_count()
-    habits = is_habit_completed(counts)
-    habit_percentage = calculate_completion(habits, counts)
-    display_habits_completion(habits)
-    print(f"Habit Completion Status: {habit_percentage}%")
+def get_yes_no(prompt):
+    """Ask a yes/no question and return True for yes, False for no."""
+    while True:
+        answer = input(prompt).strip().lower()
+        if answer == "yes":
+            return True
+        elif answer == "no":
+            return False
+        print("Please type 'yes' or 'no' only.")
 
-display_results()
+def track_habits():
+    habit_count = get_positive_int("How many habits do you want to track today?: ")
+    habits = {}
 
+    for _ in range(habit_count):
+        name = get_unique_habit(habits)
+        completed = get_yes_no("Did you complete it today? (yes/no): ")
+        habits[name] = completed
 
+    return habits
+
+def display_summary(habits):
+    print("\n--- Daily Habit Summary ---")
+    completed_count = 0
+
+    for idx, (name, done) in enumerate(habits.items(), start=1):
+        status = "Completed" if done else "Incomplete"
+        print(f"{idx}. {name} - {status}")
+        if done:
+            completed_count += 1
+
+    percentage = round((completed_count / len(habits)) * 100, 2)
+    print(f"Habit Completion Percentage: {percentage}%")
+
+def main():
+    habits = track_habits()
+    display_summary(habits)
+
+if __name__ == "__main__":
+    main()
