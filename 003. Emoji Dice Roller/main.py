@@ -24,28 +24,69 @@
     # Use lists to store dice faces.
     # Use random.choice() or random.randint() for rolling.
     # Keep user input validation robust.
-    # Show individual dice faces and total sum.`
-
-
+    # Show individual dice faces and total sum.
 
 import random
 
-dice_faces = ["🎲 1", "🎲 2", "🎲 3", "🎲 4", "🎲 5", "🎲 6"]
-dice_value = [1, 2, 3, 4, 5, 6]
+DICE = [
+    ("🎲 1", 1),
+    ("🎲 2", 2),
+    ("🎲 3", 3),
+    ("🎲 4", 4),
+    ("🎲 5", 5),
+    ("🎲 6", 6)
+]
 
-rolled_dice_faces = []
-
-def roll_dice():
-    global rolled_dice_faces
+def get_user_dice_count():
+    """Ask user how many dice to roll, return integer 1-5."""
     while True:
         try:
-            number_of_dice = int(input("How many dice you want to roll?: "))
-            for dice in range(number_of_dice):
-                dice = random.choice(dice_faces)
-                rolled_dice_faces.append(dice)
-            rolled_dice_faces = " ".join(rolled_dice_faces)
-            return rolled_dice_faces
+            dice_count = int(input("How many dice do you want to roll? (1-5): "))
+            if 1 <= dice_count <= 5:
+                return dice_count
+            print("Invalid number. Please enter between 1 and 5.")
         except ValueError:
-            print("Invalid Input: Only input a valid number.")
+            print("Invalid input. Please enter a valid number input")
 
-print(roll_dice())
+def roll_dice(count):
+    """
+    Roll `count` dice.
+    Returns two lists: faces (emojis) and values (ints).
+    """
+
+    faces = []
+    values = []
+
+    for _ in range(count):
+        face, value = random.choice(DICE)
+        faces.append(face)
+        values.append(value)
+
+    return faces, values
+
+def display_results(faces, values):
+    """Display individual dice rolled and their sum."""
+    print("\n--- Dice Result ---")
+    print("Rolled:", " ".join(faces))
+    print("Total:", sum(values))
+
+    # Optional fun message
+    if all(v == 6 for v in values):
+        print("Jackpot! ALL sixes!")
+    elif sum(values) >= (6 * len(values)) - 1:
+        print("Almost perfect roll!")
+
+def game():
+    """Main game loop"""
+    while True:
+        count = get_user_dice_count()
+        faces, values = roll_dice(count)
+        display_results(faces, values)
+
+        again = input("\nRoll again? (yes/no): ").lower()
+        if again != "yes":
+            print("Thanks for playing!")
+            break
+
+if __name__ == "__main__":
+    game()
