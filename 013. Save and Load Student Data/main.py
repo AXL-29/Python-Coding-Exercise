@@ -1,3 +1,6 @@
+import os
+
+
 def get_valid_int(prompt):
     while True:
         try:
@@ -31,6 +34,18 @@ def validate_name(prompt):
             print("Invalid input, letters and spaces only.")
 
 grades = {"Jade": (98, "A")}
+
+file_data = {}
+if os.path.exists("data.txt"):
+    with open("grade.txt", "r") as file:
+        for line in file:
+            line = line.strip()
+            if not line:
+                continue
+            key, value = line.split(":", 1)
+            file_data[key] = float(value)
+
+
 count = get_valid_int("Enter a number: ")
 for i in range(count):
     name = validate_name("Enter a name: ")
