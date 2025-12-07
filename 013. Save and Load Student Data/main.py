@@ -31,16 +31,14 @@ def validate_name(prompt):
             print("Invalid input, letters and spaces only.")
 
 grades = {"Jade": (98, "A")}
+count = get_valid_int("Enter a number: ")
+for i in range(count):
+    name = validate_name("Enter a name: ")
+    score = get_valid_float("Enter a score: ")
+    grade = input("Enter a grade: ")
 
-with open("grade.txt", "a") as file:
-    for name, (score, grade) in grades.items():
-        file.write(f"{name}: {score} : {grade}\n")
+    grades[name] = (score, grade)
 
-    count = get_valid_int("Enter a number: ")
-    for i in range(count):
-        name = validate_name("Enter a name: ")
-        score = get_valid_float("Enter a score: ")
-        grade = input("Enter a grade: ")
-
-        grades["name"] = (score, grade)
-
+    with open("grade.txt", "w") as file:
+        for name, (score, grade) in grades.items():
+            file.write(f"{name}: {score} : {grade}\n")
