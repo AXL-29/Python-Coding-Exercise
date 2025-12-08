@@ -1,0 +1,9 @@
+data:
+jade:67.0:D
+jana:89.0:B
+jelou:56.0:F
+
+stats:
+high:89.0
+low:56.0
+average:70.66666666666667
