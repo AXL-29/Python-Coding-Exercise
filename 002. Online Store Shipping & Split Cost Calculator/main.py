@@ -1,39 +1,3 @@
-# Online Store Shipping & Split Cost Calculator
-# Concepts:
-# Numeric input
-# Arithmetic operations
-# Rounding
-# Conditional statements (if / elif / else)
-# Functions with return values
-# Task Description: You are building a shopping/shipping helper for an online store. The program should:
-# 1️⃣ Ask the user for:
-    # Total purchase amount (a number, e.g., 1500.75)
-    # Shipping type (local or international)
-    # Number of people splitting the cost
-# 2️⃣ Calculate:
-    # Shipping cost based on your rules:
-    # Local shipping → cheaper rate
-    # International shipping → higher rate
-    # Total amount including shipping
-    # How much each person should pay (split evenly, rounded to 2 decimal places)
-# 3️⃣ Handle input validation:
-    # Purchase amount must be positive
-    # Number of people must be at least 1
-    # Shipping type must be either local or international
-# Rules & Requirements
-# Use a function that calculates the per-person cost, given purchase amount, shipping type, and number of people.
-# If the number of people is less than 1 → display an error and do not do the calculation.
-# Round the per-person amount to 2 decimal places.
-# Print a clear summary:
-    # Total purchase amount
-    # Shipping cost
-    # Total including shipping
-    # Amount per person
-# Optional Enhancements (not required)
-    # Let the user enter shipping rates instead of hardcoding them
-    # Show a friendly message if per-person cost is very high or very low
-    # Add currency formatting (e.g., ₱ or $)
-
 """Online store shipping and bill-splitting calculator with input validation."""
 
 LOCAL = 100
