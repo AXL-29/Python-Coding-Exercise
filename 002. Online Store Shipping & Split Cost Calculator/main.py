@@ -34,61 +34,90 @@
     # Show a friendly message if per-person cost is very high or very low
     # Add currency formatting (e.g., ₱ or $)
 
-LOCAL = 100.00
-INTERNATIONAL = 200.00
-shipping_cost = 0
+"""Online store shipping and bill-splitting calculator with input validation."""
 
-def per_person_cost(total_cost, to_split):
-    per_people_bill = total_cost / to_split
-    return round(per_people_bill, 2)
+LOCAL = 100
+INTERNATIONAL = 200
 
-def format_currency(value):
-    return f"${round(value, 2):,.2f}"
 
-while True:
-    try:
-        total_purchased = float(input("Please enter the total purchase amount (e.g., 1599.50): $"))
-        if total_purchased <= 0:
-            print("Invalid input. Please enter a positive number.")
+def decimal_validation(prompt):
+    """Validate and return a positive decimal number from user input."""
+    while True:
+        try:
+            value = float(input(prompt))
+            if value <= 0:
+                print("Please input a positive number!")
+            else:
+                return value
+        except ValueError:
+            print("Please input a valid numeric value.")
+
+
+def positive_int_validation(prompt):
+    """Validate and return a positive integer greater than zero."""
+    while True:
+        try:
+            value = int(input(prompt))
+            if value >= 1:
+                return value
+            else:
+                print("Please enter a number greater than 0.")
+        except ValueError:
+            print("Please enter a valid integer.")
+
+
+def shipping_type(prompt):
+    """Prompt for shipping type and return its name and cost."""
+    while True:
+        value = input(prompt).lower().strip()
+        if value == "local":
+            return value, LOCAL
+        elif value == "international":
+            return value, INTERNATIONAL
         else:
-            break
-    except ValueError:
-        print("Invalid input. Please enter a valid number. Input must be a numeric value.")
+            print("Please choose either 'local' or 'international'.")
 
-while True:
-    shipping_type = input("Select shipping type — local or international: ").lower()
-    if shipping_type == "local":
-        shipping_cost = LOCAL
-        break
-    elif shipping_type == "international":
-        shipping_cost = INTERNATIONAL
-        break
-    else:
-        print("Invalid option. Please type 'local' or 'international'.")
 
-while True:
-    try:
-        split_count = int(input("How many people will split the total cost?: "))
-        if split_count >= 1:
-            if split_count == 1:
-                print("No splitting actually happens")
-            break
+def calculate_total_bill(total_amount, shipping_cost):
+    """Return the total bill including shipping cost."""
+    return total_amount + shipping_cost
+
+
+def calculate_split_bills(total_bill, people):
+    """Return the evenly split bill amount per person."""
+    return total_bill / people
+
+
+def display_bills(total_amount, shipping_cost, total_bill, per_person, ship_type):
+    """Display a formatted summary of the billing details."""
+    print("\n--- BILL SUMMARY ---")
+    print(f"Purchase amount: ${total_amount:.2f}")
+    print(f"{ship_type.title()} shipping cost: ${shipping_cost:.2f}")
+    print(f"Total including shipping: ${total_bill:.2f}")
+    print(f"Amount per person: ${per_person:.2f}\n")
+
+
+def main():
+    """Control program flow and handle user interaction."""
+    while True:
+        total_amount = decimal_validation("Total purchase amount: $")
+        ship_type, shipping_cost = shipping_type("Enter shipping type (local/international): ")
+        people = positive_int_validation("Number of people splitting the bill: ")
+
+        total_bill = calculate_total_bill(total_amount, shipping_cost)
+
+        if people == 1:
+            print("\nNothing to split.")
+            print(f"Total bill: ${total_bill:.2f}")
         else:
-            print("Invalid number. Please enter a whole number greater than 0.")
-    except ValueError:
-        print("Invalid number. Please enter a valid number. Input must be a numeric value.")
+            per_person = calculate_split_bills(total_bill, people)
+            display_bills(total_amount, shipping_cost, total_bill, per_person, ship_type)
 
-total_amount = total_purchased + shipping_cost
-amount_per_person = per_person_cost(total_amount, split_count)
+        again = input("Do you want to calculate again? (yes/no): ").lower()
+        if again != "yes":
+            print("Thank you for using the split calculator app!")
+            break
 
 
-print("\n------------------ ORDER SUMMARY ------------------")
-print(f"Purchase Amount: {format_currency(total_purchased)}")
-print(f"Shipping Type: {shipping_type.title()}")
-print(f"Shipping Cost: {format_currency(shipping_cost)}")
-print("---------------------------------------------------")
-print(f"Total Amount (with shipping): {format_currency(total_amount)}")
-print(f"Split Between: {split_count} person(s)")
-print(f"Amount Per Person: {format_currency(amount_per_person)}")
-print("---------------------------------------------------")
-print("Thank you for using the Shipping & Split Calculator!")
+if __name__ == "__main__":
+    main()
