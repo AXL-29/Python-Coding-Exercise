@@ -1,59 +1,44 @@
-# Personal Profile Generator (Days 1–3)
-# Concepts:
-# variables
-    # input
-    # basic math
-    # f-strings
-    # string concatenation
-# Task:
-    # Make a program that collects:
-    # Full name
-    # Birth year
-    # A goal for this year
-# Then:
-    # Calculate the user’s current age (using the current year of your choice)
-    # Print a short “profile summary” message
-    # Include the goal in a motivational sentence
-# Rule:
-    # Use two different ways to display variables in output.
+from datetime import date
 
-from datetime import datetime
-
-current_year = datetime.now().year
-birth_year = 0
-
-while True:
-    full_name = input("Please enter your full name: ").title()
-    if full_name.strip() == "" or not full_name.replace(" ", "").isalpha():  # isalpha() - checks if character is a letter (A-Z, a-z)
-        print("Invalid input: names can only contain letters and spaces. Please try again.")
-        continue
-    else:
-        break
-
-while True:
-    try:
-        birth_year = int(input("Please enter your birth year (e.g., 2005): "))
-        if birth_year >= current_year:
-            print("Hmm… that year seems to be in the future. Please enter a valid birth year.")
+def name_validation(prompt):
+    """Prompts the user until a valid name containing only letters and spaces is entered."""
+    while True:
+        value = input(prompt)
+        if value.replace(" ", "").strip().isalpha():
+            return value
         else:
-            break
+            print("Please enter a valid name that only consist of space and letters.")
 
-    except ValueError:
-        print("Invalid input. Please enter a valid year as a number.")
+def birth_year_validation(prompt):
+    """Prompts the user until a valid numeric birth year within a realistic range is entered."""
+    current_year = date.today().year
+    while True:
+        try:
+            value = int(input(prompt))
+            if value < 1900 or value > current_year:
+                print("Please enter a valid birth year.")
+            else:
+                return value
+        except ValueError:
+            print("Please enter numbers only")
 
-while True:
-    goal = input("What is your goal for this year?: ")
-    if goal.strip() == "":
-        print("Goal cannot be empty. Please type something.")
-        continue
-    else:
-        break
+def calculate_age(s_birth_year):
+    """Calculates the user's age based on the current year and given birth year."""
+    return date.today().year - s_birth_year
 
+def display_output(s_name, s_birth_year, s_age, s_goal):
+    """Displays a formatted profile summary and a motivational message using different output styles."""
+    print(f"My name is {s_name}. I am {s_age} years old, born in {s_birth_year}.")
+    print("My current goal this year is to become a " + s_goal + ". I'm working on it every day!")
 
-current_age = current_year - birth_year
-in_another_five_years = current_age + 5
+def main_loop():
+    """Controls the program flow by collecting input, calculating age, and displaying results."""
+    name = name_validation("Enter your name: ")
+    birth_year = birth_year_validation("Enter your birth year: ")
+    goal = input("Enter your goal this year: ")
+    age = calculate_age(birth_year)
 
-print("\n------------------- PROFILE SUMMARY -------------------")
-print(f"Hello! My name is {full_name}, and I am currently {current_age} years old.")
-print("My goal for this year is to become a " + goal + ", and I’m determined to achieve it!")
-print(f"In 5 years, I will be {in_another_five_years} years old. Keep working towards your goal, you’ve got this!")
+    display_output(name, birth_year, age, goal)
+
+if __name__ == "__main__":
+    main_loop()
