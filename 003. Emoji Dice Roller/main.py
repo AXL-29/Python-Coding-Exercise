@@ -37,56 +37,39 @@ DICE = [
     ("🎲 6", 6)
 ]
 
-def get_user_dice_count():
-    """Ask user how many dice to roll, return integer 1-5."""
-    while True:
-        try:
-            dice_count = int(input("How many dice do you want to roll? (1-5): "))
-            if 1 <= dice_count <= 5:
-                return dice_count
-            print("Invalid number. Please enter between 1 and 5.")
-        except ValueError:
-            print("Invalid input. Please enter a valid number input")
-
-def roll_dice(count):
-    """
-    Roll `count` dice.
-    Returns two lists: faces (emojis) and values (ints).
-    """
-
+def rolling_dice(num_of_dice):
     faces = []
     values = []
 
-    for _ in range(count):
+    for _ in range(num_of_dice):
         face, value = random.choice(DICE)
         faces.append(face)
         values.append(value)
 
     return faces, values
 
-def display_results(faces, values):
-    """Display individual dice rolled and their sum."""
-    print("\n--- Dice Result ---")
-    print("Rolled:", " ".join(faces))
-    print("Total:", sum(values))
-
-    # Optional fun message
-    if all(v == 6 for v in values):
-        print("Jackpot! ALL sixes!")
-    elif sum(values) >= (6 * len(values)) - 1:
-        print("Almost perfect roll!")
-
-def game():
-    """Main game loop"""
+def number_of_dice(prompt):
     while True:
-        count = get_user_dice_count()
-        faces, values = roll_dice(count)
-        display_results(faces, values)
+        try:
+            value = int(input(prompt))
+            if value < 0:
+                print("Please enter a positive numeric value")
+            elif value > 5:
+                print("Please enter a number between 1 and 5 only")
+            else:
+                return value
+        except ValueError:
+            print("Please enter a numeric value only!")
 
-        again = input("\nRoll again? (yes/no): ").lower()
-        if again != "yes":
-            print("Thanks for playing!")
-            break
+def total_sum(rolled_dice_values):
+    results = sum(rolled_dice_values)
+    return results
 
-if __name__ == "__main__":
-    game()
+def display_outputs(s_dice_faces,  s_sum_of_dice):
+    print(f"Faces rolled: {s_dice_faces}")
+    print(f"Total: {s_sum_of_dice}")
+
+roll_to_dice = number_of_dice("Enter a number of dice to roll: ")
+dice_faces, dice_values = rolling_dice(roll_to_dice)
+sum_of_dice = total_sum(dice_values)
+display_outputs(dice_faces, sum_of_dice)
